@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VTO Martial Arts – Cửa hàng võ phục</title>
+  <meta name="description" content="Cửa hàng võ phục & dụng cụ võ thuật VTO – Mua online, giỏ hàng, tính tổng, lưu tạm thời trên trình duyệt." />
+  <style>
+    :root{
+      --bg:#0f1220;          /* nền tối xanh tím */
+      --card:#151931;        /* thẻ */
+      --muted:#8b90a8;       /* chữ phụ */
+      --text:#e6e8f2;        /* chữ chính */
+      --brand:#5b8cff;       /* điểm nhấn */
+      --brand-2:#65d6a6;     /* điểm nhấn phụ */
+      --danger:#ff6b6b;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;}
+    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; background:linear-gradient(180deg,#0d1021,#0b1020 60%,#0a0e1b); color:var(--text);}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:rgba(10,14,27,.6);backdrop-filter: blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;gap:12px}
+    .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+    .logo .mark{width:38px;height:38px;border-radius:12px;background:radial-gradient(120px 60px at 30% 20%, var(--brand), transparent 60%), radial-gradient(120px 60px at 70% 80%, var(--brand-2), transparent 60%), #1a1f3d; box-shadow: var(--shadow)}
+    .logo h1{font-size:18px;letter-spacing:.5px;margin:0}
+    nav{margin-left:auto;display:flex;gap:14px;align-items:center}
+    nav a{color:var(--text);text-decoration:none;font-weight:600;opacity:.9}
+    nav a:hover{opacity:1}
+    .cart-btn{position:relative;border:1px solid rgba(255,255,255,.12);background:#141936;border-radius:14px;padding:10px 14px;font-weight:700;color:var(--text);cursor:pointer}
+    .cart-count{position:absolute;top:-8px;right:-8px;background:var(--brand);color:#fff;border-radius:999px;padding:2px 7px;font-size:12px;font-weight:800}
+
+    /* Hero */
+    .hero{max-width:1200px;margin:28px auto;padding:0 18px 8px}
+    .hero-inner{display:grid;grid-template-columns: 1.2fr .8fr;gap:20px}
+    .hero .card{padding:28px}
+    .hero h2{font-size:34px;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0 0 16px}
+    .badges{display:flex;flex-wrap:wrap;gap:10px}
+    .badge{background:#12162c;border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:999px;font-size:13px}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-img{border-radius:var(--radius);height:100%;background: radial-gradient(200px 120px at 30% 20%, rgba(91,140,255,.25), transparent 60%), radial-gradient(200px 120px at 70% 80%, rgba(101,214,166,.25), transparent 60%), url('https://images.unsplash.com/photo-1598970434795-0c54fe7c0642?q=80&w=1600&auto=format&fit=crop'); background-size:cover;background-position:center}
+
+    /* Search + Grid */
+    .toolbar{max-width:1200px;margin:0 auto;padding:12px 18px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .search{flex:1;display:flex;gap:10px}
+    .search input{flex:1;background:#101534;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;color:var(--text)}
+    .search select{background:#101534;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;color:var(--text)}
+
+    .grid{max-width:1200px;margin:16px auto;padding:0 18px 24px;display:grid;grid-template-columns: repeat( auto-fit, minmax(240px,1fr) );gap:16px}
+    .product{display:flex;flex-direction:column}
+    .product .thumb{aspect-ratio: 4/3; border-radius:16px;background:#0f1431 url('') center/cover;border:1px solid rgba(255,255,255,.06)}
+    .product h3{margin:10px 0 6px;font-size:18px}
+    .price{font-weight:800}
+    .price del{color:var(--muted);font-weight:600;margin-left:6px}
+    .muted{color:var(--muted);font-size:14px}
+    .actions{display:flex;gap:8px;margin-top:auto}
+    .btn{flex:1;background:linear-gradient(180deg,var(--brand),#3f6fe9);border:none;border-radius:12px;padding:10px 12px;color:white;font-weight:800;cursor:pointer}
+    .btn.secondary{background:#171d3d;border:1px solid rgba(255,255,255,.12);font-weight:700}
+    .btn:active{transform:translateY(1px)}
+
+    /* Cart Drawer */
+    .drawer{position:fixed;inset:0 0 0 auto;display:grid;grid-template-columns:1fr min(520px, 92vw);pointer-events:none}
+    .drawer .overlay{background:rgba(0,0,0,.5);opacity:0;transition:.2s}
+    .drawer .panel{background:var(--card);border-left:1px solid rgba(255,255,255,.08); transform:translateX(100%);transition:.25s ease; padding:18px 16px 90px;display:flex;flex-direction:column;gap:12px}
+    .drawer.open{pointer-events:auto}
+    .drawer.open .overlay{opacity:1}
+    .drawer.open .panel{transform:none}
+
+    .cart-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px}
+    .cart-title{font-size:20px;margin:0}
+    .x{background:transparent;border:1px solid rgba(255,255,255,.14);color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer}
+
+    .cart-items{display:flex;flex-direction:column;gap:10px;overflow:auto;min-height:120px}
+    .cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;background:#121733;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px}
+    .ci-img{width:64px;height:64px;border-radius:10px;background:#0e1430 center/cover no-repeat;border:1px solid rgba(255,255,255,.06)}
+    .ci-title{font-weight:700;margin:0}
+    .qty{display:flex;align-items:center;gap:8px}
+    .qty button{width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.14);background:#151b3a;color:var(--text);font-weight:800;cursor:pointer}
+    .ci-price{font-weight:800}
+    .remove{background:transparent;border:none;color:var(--danger);cursor:pointer;font-weight:800}
+
+    .totals{margin-top:8px;border-top:1px dashed rgba(255,255,255,.14);padding-top:12px}
+    .totals-row{display:flex;justify-content:space-between;margin:6px 0}
+    .totals-row.grand{font-weight:900;font-size:18px}
+
+    .checkout{position:sticky;bottom:0;left:0;right:0;padding:14px 0;background:linear-gradient(180deg, rgba(21,27,58,.2), #141937 30%, #141937);border-top:1px solid rgba(255,255,255,.08)}
+    .checkout .btn{width:100%}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* Footer */
+    footer{max-width:1200px;margin:0 auto;padding:20px 18px 40px;color:var(--muted)}
+
+    @media (max-width: 900px){
+      .hero-inner{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a href="#" class="logo" aria-label="Trang chủ VTO">
+        <div class="mark" aria-hidden="true"></div>
+        <h1>VTO Martial Arts</h1>
+      </a>
+      <nav>
+        <a href="#san-pham">Sản phẩm</a>
+        <a href="#gioi-thieu">Giới thiệu</a>
+        <a href="#lien-he">Liên hệ</a>
+        <button id="openCart" class="cart-btn" aria-label="Mở giỏ hàng">
+          Giỏ hàng <span id="cartCount" class="cart-count">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <div class="card">
+          <h2>Võ phục & phụ kiện chính hãng</h2>
+          <p>Chất liệu bền, thấm hút tốt – phù hợp luyện tập & thi đấu. Giao nhanh toàn quốc. COD tận nơi.</p>
+          <div class="badges">
+            <div class="badge">Bảo hành 1 đổi 1</div>
+            <div class="badge">Miễn phí đổi size</div>
+            <div class="badge">Thanh toán khi nhận</div>
+          </div>
+        </div>
+        <div class="hero-img card" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search">
+        <input id="q" type="search" placeholder="Tìm: võ phục, đai, găng..." />
+        <select id="sort">
+          <option value="popular">Sắp xếp: Phổ biến</option>
+          <option value="price-asc">Giá tăng dần</option>
+          <option value="price-desc">Giá giảm dần</option>
+          <option value="name-asc">Tên (A→Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products grid -->
+    <section id="san-pham" class="grid"></section>
+
+    <!-- About / Contact -->
+    <section id="gioi-thieu" class="hero" style="margin-top:0">
+      <div class="card" style="padding:22px">
+        <h2>Giới thiệu</h2>
+        <p class="muted">VTO Martial Arts chuyên cung cấp võ phục Vovinam, Taekwondo, Karate và phụ kiện luyện tập. Cam kết hàng chuẩn, giá hợp lý, hậu mãi chu đáo.</p>
+      </div>
+    </section>
+
+    <section id="lien-he" class="hero" style="margin-top:0">
+      <div class="card" style="padding:22px">
+        <h2>Liên hệ</h2>
+        <p>Email: <a href="mailto:vto.martialarts@gmail.com">vto.martialarts@gmail.com</a> · Zalo: 09xx xxx xxx</p>
+        <p class="small">Tip: Bạn có thể tích hợp nút chat Messenger/Zalo hoặc form Google Forms để nhận đơn.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="overlay" data-close></div>
+    <aside class="panel">
+      <div class="cart-head">
+        <h3 class="cart-title">Giỏ hàng</h3>
+        <button class="x" data-close aria-label="Đóng giỏ hàng">✕</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="totals">
+        <div class="totals-row"><span>Tạm tính</span><strong id="subTotal">0₫</strong></div>
+        <div class="totals-row"><span>Phí vận chuyển</span><span id="ship">0₫</span></div>
+        <div class="totals-row grand"><span>Thành tiền</span><span id="grand">0₫</span></div>
+        <p class="small">* Phí ship ước tính. Bạn có thể chỉnh trong mã (biến <code>SHIPPING_THRESHOLD</code> / <code>SHIPPING_FEE</code>).</p>
+      </div>
+      <div class="checkout">
+        <button id="checkoutBtn" class="btn">Đặt hàng</button>
+        <p class="small" style="margin:8px 0 0">Sau khi bấm, hệ thống sẽ tạo email tóm tắt đơn hàng để bạn gửi tới shop.</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <p>© 2025 VTO Martial Arts · Made with ♥ · Lưu giỏ hàng bằng LocalStorage (trình duyệt).</p>
+  </footer>
+
+  <script>
+    // ====== DỮ LIỆU SẢN PHẨM MẪU ======
+    const PRODUCTS = [
+      {id:"vovin-01", name:"Võ phục Vovinam tiêu chuẩn", price: 350000, compareAt: 420000, img:"https://images.unsplash.com/photo-1589921460910-6343adf07a7b?q=80&w=1200&auto=format&fit=crop", tags:["võ phục","vovinam"]},
+      {id:"vovin-02", name:"Đai Vovinam cao cấp", price: 120000, img:"https://images.unsplash.com/photo-1581338834647-b0fb40704e21?q=80&w=1200&auto=format&fit=crop", tags:["đai","vovinam"]},
+      {id:"tkd-01", name:"Võ phục Taekwondo trắng", price: 390000, compareAt: 450000, img:"https://images.unsplash.com/photo-1611907888036-ec2a5441c1d7?q=80&w=1200&auto=format&fit=crop", tags:["võ phục","taekwondo"]},
+      {id:"kar-01", name:"Đai đen Karate", price: 150000, img:"https://images.unsplash.com/photo-1625612016233-8689a2262c55?q=80&w=1200&auto=format&fit=crop", tags:["đai","karate"]},
+      {id:"box-01", name:"Găng tay Boxing (cặp)", price: 480000, compareAt: 520000, img:"https://images.unsplash.com/photo-1573096202428-516a3431c1f9?q=80&w=1200&auto=format&fit=crop", tags:["găng","boxing"]},
+      {id:"prot-01", name:"Bảo hộ ống quyển", price: 220000, img:"https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=1200&auto=format&fit=crop", tags:["bảo hộ"]},
+    ];
+
+    // ====== THIẾT LẬP ======
+    const SHIPPING_THRESHOLD = 500000; // miễn phí ship nếu >= ngưỡng
+    const SHIPPING_FEE = 30000;        // phí ship cố định nếu dưới ngưỡng
+
+    // ====== TIỆN ÍCH ======
+    const fmt = (v) => v.toLocaleString('vi-VN', {style:'currency', currency:'VND'});
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    // ====== STATE GIỎ HÀNG ======
+    const CART_KEY = 'vto.cart.v1';
+    let cart = loadCart(); // {id: {id,name,price,qty,img}}
+
+    function loadCart(){
+      try{ return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }catch{ return {}; }
+    }
+    function saveCart(){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+
+    function addToCart(p, qty=1){
+      if(!cart[p.id]) cart[p.id] = { id:p.id, name:p.name, price:p.price, img:p.img, qty:0 };
+      cart[p.id].qty += qty; if(cart[p.id].qty < 1) cart[p.id].qty = 1;
+      saveCart(); renderCart(); pulseCart();
+    }
+    function removeItem(id){ delete cart[id]; saveCart(); renderCart(); }
+    function setQty(id, qty){ if(cart[id]){ cart[id].qty = Math.max(1, qty|0); saveCart(); renderCart(); }}
+
+    function cartItems(){ return Object.values(cart); }
+    function subTotal(){ return cartItems().reduce((s,i)=> s + i.price*i.qty, 0); }
+    function shipping(){ return subTotal() >= SHIPPING_THRESHOLD || subTotal()===0 ? 0 : SHIPPING_FEE; }
+
+    // ====== HIỂN THỊ SẢN PHẨM ======
+    const grid = $('#san-pham');
+    const q = $('#q');
+    const sort = $('#sort');
+
+    function renderProducts(){
+      const term = q.value.trim().toLowerCase();
+      let list = PRODUCTS.filter(p=> !term || p.name.toLowerCase().includes(term) || (p.tags||[]).some(t=>t.includes(term)) );
+      switch(sort.value){
+        case 'price-asc': list.sort((a,b)=>a.price-b.price); break;
+        case 'price-desc': list.sort((a,b)=>b.price-a.price); break;
+        case 'name-asc': list.sort((a,b)=>a.name.localeCompare(b.name)); break;
+        default: /* popular */ break;
+      }
+      grid.innerHTML = list.map(p=> `
+        <article class="product card" aria-label="${p.name}">
+          <div class="thumb" style="background-image:url('${p.img}')"></div>
+          <h3>${p.name}</h3>
+          <div class="muted">Mã: ${p.id}</div>
+          <div class="price">${fmt(p.price)} ${p.compareAt?`<del>${fmt(p.compareAt)}</del>`:''}</div>
+          <div class="actions">
+            <button class="btn" data-add="${p.id}">Mua ngay</button>
+            <button class="btn secondary" data-view="${p.id}">Xem</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // Sự kiện cho nút mua
+    grid.addEventListener('click', e=>{
+      const addId = e.target.closest('[data-add]')?.dataset.add;
+      const viewId = e.target.closest('[data-view]')?.dataset.view;
+      if(addId){
+        const p = PRODUCTS.find(x=>x.id===addId);
+        addToCart(p,1);
+        openDrawer();
+      }
+      if(viewId){
+        const p = PRODUCTS.find(x=>x.id===viewId);
+        alert(`${p.name}\nGiá: ${fmt(p.price)}\n\nMô tả: Chất liệu bền, thoáng. Vui lòng chọn size khi đặt hàng.`);
+      }
+    });
+
+    // ====== HIỂN THỊ GIỎ HÀNG ======
+    const drawer = $('#drawer');
+    const cartItemsEl = $('#cartItems');
+    const openBtn = $('#openCart');
+    const cartCount = $('#cartCount');
+
+    function renderCart(){
+      const items = cartItems();
+      cartCount.textContent = items.reduce((n,i)=> n+i.qty, 0);
+      if(items.length===0){
+        cartItemsEl.innerHTML = `<p class="muted">Giỏ hàng đang trống.</p>`;
+      } else {
+        cartItemsEl.innerHTML = items.map(i=> `
+          <div class="cart-item" data-id="${i.id}">
+            <div class="ci-img" style="background-image:url('${i.img}')"></div>
+            <div>
+              <p class="ci-title">${i.name}</p>
+              <div class="qty">
+                <button data-dec>-</button>
+                <span>${i.qty}</span>
+                <button data-inc>+</button>
+                <button class="remove" data-remove>xoá</button>
+              </div>
+            </div>
+            <div class="ci-price">${fmt(i.price*i.qty)}</div>
+          </div>
+        `).join('');
+      }
+      $('#subTotal').textContent = fmt(subTotal());
+      $('#ship').textContent = fmt(shipping());
+      $('#grand').textContent = fmt(subTotal()+shipping());
+    }
+
+    cartItemsEl.addEventListener('click', e=>{
+      const wrap = e.target.closest('.cart-item');
+      if(!wrap) return;
+      const id = wrap.dataset.id;
+      if(e.target.matches('[data-inc]')) setQty(id, cart[id].qty+1);
+      if(e.target.matches('[data-dec]')) setQty(id, cart[id].qty-1);
+      if(e.target.matches('[data-remove]')) removeItem(id);
+    });
+
+    // ====== DRAWER ======
+    function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
+    function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+    openBtn.addEventListener('click', openDrawer);
+    drawer.addEventListener('click', e=>{ if(e.target.hasAttribute('data-close')) closeDrawer(); });
+    $$('[data-close]').forEach(b=> b.addEventListener('click', closeDrawer));
+
+    function pulseCart(){
+      cartCount.animate([
+        { transform:'scale(1)', offset:0 },
+        { transform:'scale(1.25)', offset:.4 },
+        { transform:'scale(1)', offset:1 }
+      ], { duration:350, easing:'cubic-bezier(.2,.8,.2,1)'});
+    }
+
+    // ====== CHECKOUT (tạo email tóm tắt) ======
+    $('#checkoutBtn').addEventListener('click', ()=>{
+      const items = cartItems();
+      if(items.length===0){ alert('Giỏ hàng đang trống.'); return; }
+      const lines = items.map(i=>`- ${i.name} x${i.qty}: ${fmt(i.qty*i.price)}`);
+      lines.push(`\nTạm tính: ${fmt(subTotal())}`);
+      const ship = shipping();
+      if(ship>0) lines.push(`Phí ship: ${fmt(ship)}`);
+      lines.push(`Thành tiền: ${fmt(subTotal()+ship)}`);
+      lines.push('\nVui lòng điền Họ tên / SĐT / Địa chỉ / Ghi chú:');
+      const body = encodeURIComponent(lines.join('\n'));
+      const subject = encodeURIComponent('Đặt hàng VTO Martial Arts');
+      window.location.href = `mailto:vto.martialarts@gmail.com?subject=${subject}&body=${body}`;
+    });
+
+    // ====== KHỞI TẠO ======
+    renderProducts();
+    renderCart();
+    q.addEventListener('input', renderProducts);
+    sort.addEventListener('change', renderProducts);
+  </script>
+</body>
+</html>
